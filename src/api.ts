@@ -22,6 +22,21 @@ function getLastest(type?: string) {
   });
 }
 
+function getContent(urls: [], msg: string) {
+  let chooseArr = [],chooseId = 0;
+  chooseArr = msg.split("：");
+  chooseId = parseInt(chooseArr[0]);
+  axios
+    .get(urls[chooseId])
+    .then(res => {
+      console.log(res.data);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  
+}
 
 
-export { getLastest };
+
+export { getLastest, getContent };
