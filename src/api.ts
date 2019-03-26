@@ -1,5 +1,6 @@
 
 import axios from 'axios';
+import { resolve } from 'url';
 
 const v2ex_url = "https://www.v2ex.com";
 
@@ -22,15 +23,17 @@ function getLastest(type?: string) {
   });
 }
 function getContent(url: string) {
-  axios
-    .get(url)
-    .then(res => {
-      console.log(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-
+  return new Promise((resolve) => {
+    axios
+      .get(url)
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        resolve();
+      });
+  });
 }
 
 

@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { getLastest, getContent } from '../api';
 
 export default function () {
-  getLastest().then((res: any, ) => {
+  getLastest().then((res: any ) => {
     let res_title = [], res_url: any[] = [], i = 0, chooseId = 0;
     for (let index = 0; index < res.length; index++) {
       res_title.push(i + "：" + res[index]);
@@ -22,7 +22,18 @@ export default function () {
         if (msg === undefined) { }
         else {
           let choose = parseInt(msg.split("：")[0]);
-          getContent(res_url[choose]);
+          getContent(res_url[choose]).then((res: any) => {
+            let panel = vscode.window.createWebviewPanel(
+              'Content',
+              msg.split("：")[1],
+              vscode.ViewColumn.One,
+              {
+                enableScripts: false, 
+                retainContextWhenHidden: false,
+              }
+            );
+            panel.webview.html = res;
+          });
         }
   });
 });
