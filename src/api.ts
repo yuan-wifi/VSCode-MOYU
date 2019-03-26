@@ -21,21 +21,18 @@ function getLastest(type?: string) {
       });
   });
 }
-
-function getContent(urls: [], msg: string) {
-  let chooseArr = [],chooseId = 0;
-  chooseArr = msg.split("：");
-  chooseId = parseInt(chooseArr[0]);
+function getContent(url: string) {
   axios
-    .get(urls[chooseId])
+    .get(url)
     .then(res => {
       console.log(res.data);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
-  
+
 }
+
 
 
 
