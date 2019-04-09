@@ -2,7 +2,7 @@
 	"name": "vscode-v2ex",
 	"displayName": "vscode-v2ex",
 	"description": "在vscode中访问v2ex",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"engines": {
 		"vscode": "^1.32.0"
 	},
