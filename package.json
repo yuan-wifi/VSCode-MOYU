@@ -10,14 +10,14 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.v2-last"
+		"onCommand:extension.v2ex"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.v2-last",
-				"title": "v2-last"
+				"command": "extension.v2ex",
+				"title": "v2ex"
 			}
 		]
 	},
