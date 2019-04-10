@@ -2,7 +2,7 @@
 	"name": "vscode-v2ex",
 	"displayName": "vscode-v2ex",
 	"description": "在vscode中访问v2ex",
-	"version": "0.1.25",
+	"version": "0.1.26",
 	"publisher": "OrangeEd1t",
 	"keywords": [
 		"vscode",
