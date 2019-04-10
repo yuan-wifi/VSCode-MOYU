@@ -2,7 +2,17 @@
 	"name": "vscode-v2ex",
 	"displayName": "vscode-v2ex",
 	"description": "在vscode中访问v2ex",
-	"version": "0.1.0",
+	"version": "0.1.25",
+	"publisher": "OrangeEd1t",
+	"keywords": [
+		"vscode",
+		"v2ex",
+		"OrangeEd1t"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/OrangeEd1t/vscode-v2ex.git"
+	},
 	"engines": {
 		"vscode": "^1.32.0"
 	},
@@ -33,9 +43,8 @@
 		"vscode": "^1.1.28",
 		"tslint": "^5.12.1",
 		"@types/node": "^10.12.21",
-		"@types/mocha": "^2.2.42"
-	},
-	"dependencies": {
+		"@types/mocha": "^2.2.42",
 		"axios": "^0.18.0"
-	}
+	},
+	"dependencies": {}
 }
