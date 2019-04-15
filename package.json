@@ -2,7 +2,7 @@
 	"name": "vscode-v2ex",
 	"displayName": "vscode-v2ex",
 	"description": "在vscode中访问v2ex",
-	"version": "0.1.26",
+	"version": "0.1.30",
 	"publisher": "OrangeEd1t",
 	"keywords": [
 		"vscode",
@@ -32,19 +32,17 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
 		"postinstall": "node ./node_modules/vscode/bin/install",
-		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+		"test": "node ./node_modules/vscode/bin/test"
 	},
 	"devDependencies": {
 		"typescript": "^3.3.1",
 		"vscode": "^1.1.28",
 		"tslint": "^5.12.1",
 		"@types/node": "^10.12.21",
-		"@types/mocha": "^2.2.42",
-		"axios": "^0.18.0"
+		"@types/mocha": "^2.2.42"
 	},
-	"dependencies": {}
+	"dependencies": {
+		"axios": "^0.18.0"
+	}
 }
