@@ -1,12 +1,12 @@
 {
-	"name": "vscode-v2ex",
-	"displayName": "vscode-v2ex",
-	"description": "在vscode中访问v2ex",
-	"version": "0.1.30",
+	"name": "moyu",
+	"displayName": "MoYu",
+	"description": "这是一系列摸鱼插件",
+	"version": "0.1.33",
 	"publisher": "OrangeEd1t",
 	"keywords": [
-		"vscode",
-		"v2ex",
+		"V2ex",
+		"MoYu",
 		"OrangeEd1t"
 	],
 	"repository": {
@@ -33,7 +33,10 @@
 	},
 	"scripts": {
 		"postinstall": "node ./node_modules/vscode/bin/install",
-		"test": "node ./node_modules/vscode/bin/test"
+		"test": "node ./node_modules/vscode/bin/test",
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./"
 	},
 	"devDependencies": {
 		"typescript": "^3.3.1",
