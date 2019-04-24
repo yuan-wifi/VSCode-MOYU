@@ -2,7 +2,7 @@
 	"name": "moyu",
 	"displayName": "MoYu",
 	"description": "这是一系列摸鱼插件",
-	"version": "0.1.33",
+	"version": "0.1.35",
 	"publisher": "OrangeEd1t",
 	"keywords": [
 		"V2ex",
@@ -34,7 +34,7 @@
 	"scripts": {
 		"postinstall": "node ./node_modules/vscode/bin/install",
 		"test": "node ./node_modules/vscode/bin/test",
-		"vscode:prepublish": "npm run compile",
+		"vscode:prepublish": "cnpm run compile",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./"
 	},
