@@ -1,5 +1,6 @@
 
 import axios from 'axios';
+import * as vscode from "vscode";
 
 function getApi(url: string) {
   return new Promise(resolve => {
@@ -10,6 +11,7 @@ function getApi(url: string) {
       })
       .catch(err => {
         console.log(err);
+        vscode.window.showInformationMessage("哎哟，帖子飞了。。。");
         resolve();
       });
   });

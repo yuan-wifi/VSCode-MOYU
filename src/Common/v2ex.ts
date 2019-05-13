@@ -60,7 +60,7 @@ function getList(type: string) {
         res_content_rendered.push(results[s + 3]);
         i++;
       }
-      getpages(
+      choosePages(
         res_display_title,
         res_title,
         res_url,
@@ -72,9 +72,9 @@ function getList(type: string) {
 }
 
 /**
- * 处理获取到文章详细页面的数据
+ * 选择帖子
  */
-function getpages(
+function choosePages(
   res_display_title: any,
   res_title: any,
   res_url: any,
@@ -87,7 +87,7 @@ function getpages(
       ignoreFocusOut: true,
       matchOnDescription: true,
       matchOnDetail: true,
-      placeHolder: "你想点看啥？"
+      placeHolder: "选一个帖子瞧瞧呢"
     })
     .then(function(msg) {
       if (msg === undefined) {
@@ -103,89 +103,105 @@ function getpages(
           "</h1></a>";
 
         /*获取文章内容 */
-        let topic_Content =
-          res_content_rendered[choose] 
-          //+ '<div style="padding-top:1rem" onclick="aa();">上一页&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;下一页</div>';
+        let topic_Content = res_content_rendered[choose];
 
-        /*判断回复数是否大于100(大于100产生分页) */
-        if (res_replies > 100) {
-          for (let i = 0; i <= res_replies / 100; i++) {}
-        } else {}
-
-        /*获取回复信息 */
-        getApi(res_url[choose] + '?p=1').then((res: any) => {
-          /*初步处理返回的网页数据 */
-          let MainStr = res.substring(
-            res.indexOf('<div id="Main">'),
-            res.indexOf('<div class="c">')
-          );
-
-          /*再次处理数据(仅保留文章内容与回复) */
-          let content = MainStr.substring(
-            MainStr.indexOf('<div class="topic_content">')
-          );
-          
-          /*开始获取回复信息(本页) */
-          let i = 0,
-            replies_Html = "",
-            Headurl = "",
-            Content = "",
-            replies_Content: String = "",
-            replies_Name: String = "",
-            replies_Headurl: String = "";
-          let ss = content.split(
-            '<div id="r_'
-            //'<table cellpadding="0" cellspacing="0" border="0" width="100%">'
-          );
-          for (i = 1; i < ss.length; i++) {
-            Headurl = ss[i].substring(
-              ss[i].indexOf("<img"),
-              ss[i].indexOf("</td>")
-            );
-            Content = ss[i].substring(
-              ss[i].indexOf('<div class="reply_content">')
-            );
-            replies_Headurl =
-              '<div class="item" style="margin-top:1rem;"><div class="comment" style="display:flex"><div class="userImage">' +
-              Headurl.slice(0, 5) +
-              'width="48px" ' +
-              Headurl.slice(5, 10) +
-              "https:" +
-              Headurl.slice(10) +
-              "</div>";
-
-            replies_Name =
-              '<div style="padding-left: 1rem;"><div class="userName">' +
-              ss[i].substring(
-                ss[i].indexOf("<strong>"),
-                ss[i].indexOf('<div class="sep5">')
-              ) +
-              "</div>";
-
-            replies_Content =
-              Content.substring(
-                Content.indexOf('<div class="reply_content">'),
-                Content.indexOf("</div>")
-              ) + "</div></div></div>";
-
-            replies_Html = replies_Html + replies_Headurl + replies_Name + replies_Content;
-          }
-          /*生成网页 */
-          let panel = vscode.window.createWebviewPanel(
-            "Content",
-            msg.split("：")[1],
-            vscode.ViewColumn.One,
-            {
-              enableScripts: false,
-              retainContextWhenHidden: false
-            }
-          );
-          panel.webview.html =
-            '<div style = "margin: 0 auto 0 auto;width:50%;">' +
-            title +
-            topic_Content +
-            replies_Html + '<script> function aa() {console.log(123);}</script>';
-        });
+        generatePage(
+          res_title[choose],
+          title,
+          topic_Content,
+          res_url[choose],
+          res_replies[choose]
+        );
       }
     });
+}
+
+/**
+ * 根据选择的帖子去获取数据，并合成网页显示
+ */
+function generatePage(
+  page_Title: string,
+  topic_Title: string,
+  topic_Content: string,
+  topic_Url: string,
+  topic_Replies: number
+) {
+  /*判断回复数是否大于100(大于100产生分页) */
+  /*开始获取回复信息(本页) */
+  let i = 0,
+    replies_Html = "",
+    Headurl = "",
+    Content = "",
+    replies_Content: String = "",
+    replies_Name: String = "",
+    replies_Headurl: String = "";
+  for (let i = 0; i < topic_Replies / 100; i++) {
+    console.log("获取第"+(i+1)+"页数据");
+    /*获取回复信息 */
+    getApi(topic_Url + "?p=" + (i+1) + "")
+    .then((res: any) => {
+      /*初步处理返回的网页数据 */
+      let MainStr = res.substring(
+        res.indexOf('<div id="Main">'),
+        res.indexOf('<div class="c">')
+      );
+      /*再次处理数据(仅保留文章内容与回复) */
+      let content = MainStr.substring(
+        MainStr.indexOf('<div class="topic_content">')
+      );
+      let ss = content.split('<div id="r_');
+      for (i = 1; i < ss.length; i++) {
+        Headurl = ss[i].substring(
+          ss[i].indexOf("<img"),
+          ss[i].indexOf("</td>")
+        );
+        Content = ss[i].substring(
+          ss[i].indexOf('<div class="reply_content">')
+        );
+        replies_Headurl =
+          '<div class="item" style="margin-top:1rem;"><div class="comment" style="display:flex"><div class="userImage">' +
+          Headurl.slice(0, 5) +
+          'width="48px" ' +
+          Headurl.slice(5, 10) +
+          "https:" +
+          Headurl.slice(10) +
+          "</div>";
+        replies_Name =
+          '<div style="padding-left: 1rem;"><div class="userName">' +
+          ss[i].substring(
+            ss[i].indexOf("<strong>"),
+            ss[i].indexOf('<div class="sep5">')
+          ) +
+          "</div>";
+        replies_Content =
+          Content.substring(
+            Content.indexOf('<div class="reply_content">'),
+            Content.indexOf("</div>")
+          ) + "</div></div></div>";
+        replies_Html =
+          replies_Html + replies_Headurl + replies_Name + replies_Content;
+      }
+    })
+    .then(() => {
+      if ((i+1) >= topic_Replies / 100 + 1) {
+        console.log("生成网页");
+        /*生成网页 */
+        let panel = vscode.window.createWebviewPanel(
+          "Content",
+          page_Title,
+          vscode.ViewColumn.One,
+          {
+            enableScripts: false,
+            retainContextWhenHidden: false
+          }
+        );
+        panel.webview.html =
+          '<div style = "margin: 0 auto 0 auto;width:50%;">' +
+          topic_Title +
+          topic_Content +
+          replies_Html;
+      } else {
+      }
+    });
+  }
 }
