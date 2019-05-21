@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { getApi } from "../api";
+import { resolve } from "url";
 
 const v2ex_url = "https://www.v2ex.com";
 
@@ -128,24 +129,24 @@ function generatePage(
 ) {
   /*判断回复数是否大于100(大于100产生分页) */
   /*开始获取回复信息(本页) */
-  let i = 0,
-    replies_Html = "",
+  let replies_Html = "",
     Headurl = "",
     Content = "",
-    replies_Content: String = "",
-    replies_Name: String = "",
-    replies_Headurl: String = "";
-  for (let i = 0; i < topic_Replies / 100; i++) {
-    console.log("获取第"+(i+1)+"页数据");
+    flag = 0,
+    replies_Content: string = "",
+    replies_Name: string = "",
+    replies_Headurl: string = "";
+
+  for (let i = 1; i <= Math.ceil(topic_Replies / 100); i++) {
     /*获取回复信息 */
-    getApi(topic_Url + "?p=" + (i+1) + "")
-    .then((res: any) => {
+    getApi(topic_Url + "?p=" + i + "").then((res: any) => {
+      flag++;
       /*初步处理返回的网页数据 */
       let MainStr = res.substring(
         res.indexOf('<div id="Main">'),
         res.indexOf('<div class="c">')
       );
-      /*再次处理数据(仅保留文章内容与回复) */
+      /*再次处理数据(仅保留回复) */
       let content = MainStr.substring(
         MainStr.indexOf('<div class="topic_content">')
       );
@@ -155,9 +156,7 @@ function generatePage(
           ss[i].indexOf("<img"),
           ss[i].indexOf("</td>")
         );
-        Content = ss[i].substring(
-          ss[i].indexOf('<div class="reply_content">')
-        );
+        Content = ss[i].substring(ss[i].indexOf('<div class="reply_content">'));
         replies_Headurl =
           '<div class="item" style="margin-top:1rem;"><div class="comment" style="display:flex"><div class="userImage">' +
           Headurl.slice(0, 5) +
@@ -178,13 +177,14 @@ function generatePage(
             Content.indexOf('<div class="reply_content">'),
             Content.indexOf("</div>")
           ) + "</div></div></div>";
+        
         replies_Html =
-          replies_Html + replies_Headurl + replies_Name + replies_Content;
+          replies_Headurl +
+          replies_Name +
+          replies_Content +
+          replies_Html;
       }
-    })
-    .then(() => {
-      if ((i+1) >= topic_Replies / 100 + 1) {
-        console.log("生成网页");
+      if (flag == Math.ceil(topic_Replies / 100)){
         /*生成网页 */
         let panel = vscode.window.createWebviewPanel(
           "Content",
@@ -200,7 +200,7 @@ function generatePage(
           topic_Title +
           topic_Content +
           replies_Html;
-      } else {
+        console.log(panel.webview.html);
       }
     });
   }
